@@ -1,0 +1,39 @@
+```{r}
+library(readr)
+library(dplyr)
+library(stringr)
+
+raw_311 <- read_csv("raw_data/City_of_Miami_311_Service_Requests_Since_2015.csv")
+
+keywords <- c("flood", "water", "drain", "storm")
+
+flood_df <- raw_311 %>%
+  mutate(
+    issue_Description = as.character(issue_Description),
+    issue_type        = as.character(issue_type),
+    case_owner        = as.character(case_owner)
+  ) %>%
+  filter(
+    str_detect(issue_Description, regex(paste(keywords, collapse = "|"), ignore_case = TRUE)) |
+      str_detect(issue_type,        regex(paste(keywords, collapse = "|"), ignore_case = TRUE)) |
+      str_detect(case_owner,        regex(paste(keywords, collapse = "|"), ignore_case = TRUE))
+  )
+
+flood_df_clean <- flood_df %>%
+  filter(!is.na(X), !is.na(Y))
+
+flood_events <- flood_df_clean %>%
+  select(
+    longitude = X,
+    latitude  = Y,
+    issue_type,
+    issue_Description,
+    ticket_created_date_time
+  )
+
+write_csv(flood_events, "output_data/flood_events_miami.csv")
+
+print(head(flood_events))
+nrow(flood_events)
+
+```

@@ -1,0 +1,19 @@
+project:
+  type: manuscript
+  render:
+    - final_miami_flood_analysis.qmd   
+
+manuscript:
+  article: final_miami_flood_analysis.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    title-block-banner: "#b0e0e6"
+    code-fold: false
+    code-tools: true
+    smooth-scroll: true
